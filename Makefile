@@ -47,4 +47,4 @@ migrate:
 
 # Execute last migration file
 exec-migration:
-	$(DOCKER_COMPOSE) run --rm app alembic upgrade head"
+	$(DOCKER_COMPOSE) run --rm app alembic upgrade head
