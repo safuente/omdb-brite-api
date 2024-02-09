@@ -5,7 +5,7 @@ services:
     container_name: app
     build:
       context: .
-    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "set -a && source .env && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - ./app:/app
     ports:

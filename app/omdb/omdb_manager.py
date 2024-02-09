@@ -12,7 +12,7 @@ class OmdbManager:
     _session = None
 
     def __init__(self, db=None):
-        self.api_key = os.getenv("API_KEY")
+        self.api_key = os.getenv("API_KEY", )
         self.db = db
         self.type = "movie"
 

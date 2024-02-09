@@ -12,3 +12,7 @@ class MovieDb:
         self.db.commit()
         self.db.refresh(movie)
         return movie
+
+    def list_movies(self):
+        movies = self.db.query(Movie).order_by('title').all()
+        return movies
