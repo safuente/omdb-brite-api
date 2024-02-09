@@ -1,6 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+
 from config import settings
-from db.session import engine, Base
+from db.session import engine, Base, get_db
+from omdb.omdb_manager import OmdbManager
 
 
 
@@ -19,3 +22,10 @@ app = start_application()
 @app.get("/")
 def hello_api():
     return {"msg":"Hello FastAPI🚀"}
+
+
+@app.get("/movie/load-db")
+def hello_api(db: Session = Depends(get_db)):
+    omdb = OmdbManager(db)
+    omdb.run()
+    return {"status": "Database loaded with movies"}
