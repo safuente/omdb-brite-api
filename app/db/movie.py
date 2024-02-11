@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from fastapi_pagination.ext.sqlalchemy import paginate
 from models.movie import Movie
 
 
@@ -14,5 +15,9 @@ class MovieDb:
         return movie
 
     def list_movies(self):
-        movies = self.db.query(Movie).order_by('title').all()
+        movies = self.db.query(Movie).order_by('title').filter()
         return movies
+
+    def get_movie(self, id):
+        movie = self.db.query(Movie).filter(Movie.id==id).first()
+        return movie

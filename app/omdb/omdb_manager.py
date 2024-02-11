@@ -53,6 +53,10 @@ class OmdbManager:
                 movies_inserted += 1
                 mdb = MovieDb(self.db)
                 movie = {self.camel_to_snake(k): v for k, v in movie.items()}
+                print(movie.get('ratings'))
+                if len(movie.get('ratings')) > 0:
+                   movie['ratings'] = [{self.camel_to_snake(k): v for k, v in movie.get('ratings')[0].items()}]
+                print(movie)
                 movie_db = Movie(**movie)
                 mdb.create_movie(movie_db)
                 #print(movie)
