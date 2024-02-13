@@ -2,6 +2,14 @@ from pydantic import BaseModel
 from typing import Optional
 
 
+
+class Msg(BaseModel):
+    msg: str
+
+class Error(BaseModel):
+    error: str
+
+
 class Rating(BaseModel):
     source: str
     value: str

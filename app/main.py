@@ -2,13 +2,14 @@ from fastapi import FastAPI, Depends, Query
 from sqlalchemy.orm import Session
 from fastapi_pagination.ext.sqlalchemy import paginate
 from fastapi_pagination import Page, add_pagination
+from typing import Union
 
 from config import settings
 from db.session import engine, Base, get_db
 from omdb.omdb_manager import OmdbManager
 from db.movie import MovieDb
-from schemas.movie import MovieGet
-
+from schemas.movie import MovieGet, Error
+from exceptions import HTTPCustomException, my_http_exception_handler
 
 
 def create_tables():
@@ -28,6 +29,8 @@ Page = Page.with_custom_options(
 app = start_application()
 
 add_pagination(app)
+app.add_exception_handler(HTTPCustomException, my_http_exception_handler)
+
 
 @app.get("/")
 def hello_api():
@@ -40,14 +43,24 @@ def hello_api(db: Session = Depends(get_db)):
     omdb.run()
     return {"status": "Database loaded with movies"}
 
+
 @app.get("/movies", response_model=Page[MovieGet])
 def get_movies(db: Session = Depends(get_db)):
     md = MovieDb(db)
     movies = md.list_movies()
     return paginate(db, movies)
 
+
 @app.get("/movies/{id}", response_model=MovieGet)
 def get_movie(id, db: Session = Depends(get_db)):
     md = MovieDb(db)
     movie = md.get_movie(id)
     return movie
+
+
+@app.delete("/movies/{id}")
+def delete_movie(id, db: Session = Depends(get_db)):
+    md = MovieDb(db)
+    md.delete_movie(id)
+
+
